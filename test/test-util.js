@@ -1,19 +1,12 @@
 import { prismaClient } from "../config/database.js";
 import bcrypt from "bcrypt";
 
-export const removeTestUser = async () => {
-  await prismaClient.users.deleteMany({
-    where: {
-      username: "test",
-    },
-  });
-};
-
 export const createTestUser = async () => {
   await prismaClient.users.create({
     data: {
       username: "test",
       password: await bcrypt.hash("rahasia", 10),
+      token: "test",
     },
   });
 };
@@ -26,44 +19,54 @@ export const getTestUser = async () => {
   });
 };
 
-export const removeAllTestContacts = async () => {
-  await prismaClient.contact.deleteMany({
+export const removeTestUser = async () => {
+  await prismaClient.users.deleteMany({
     where: {
-      username: "test",
+      username: {
+        contains: "test",
+      },
     },
   });
 };
 
-export const createTestContact = async () => {
-  await prismaClient.contact.create({
+export const createTestTask = async () => {
+  await prismaClient.tasks.create({
     data: {
       username: "test",
-      first_name: "test",
-      last_name: "test",
-      email: "test@pzn.com",
-      phone: "080900000",
+      title: "test",
+      description: "test",
+      completed: false,
     },
   });
 };
 
-export const createManyTestContacts = async () => {
+export const createManyTestTask = async () => {
   for (let i = 0; i < 15; i++) {
-    await prismaClient.contact.create({
+    await prismaClient.tasks.create({
       data: {
         username: `test`,
-        first_name: `test ${i}`,
-        last_name: `test ${i}`,
-        email: `test${i}@pzn.com`,
-        phone: `080900000${i}`,
+        title: `test ${i}`,
+        description: `test ${i}`,
+        completed: `test${i}@smail.com`,
       },
     });
   }
 };
 
-export const getTestContact = async () => {
-  return prismaClient.contact.findFirst({
+export const getTestTask = async () => {
+  return prismaClient.tasks.findFirst({
     where: {
       username: "test",
+    },
+  });
+};
+
+export const removeAllTestTask = async () => {
+  await prismaClient.tasks.deleteMany({
+    where: {
+      username: {
+        contains: "test",
+      },
     },
   });
 };

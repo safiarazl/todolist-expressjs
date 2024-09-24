@@ -7,7 +7,7 @@ export const authMiddleware = async (req, res, next) => {
             errors: "Unauthorized"
         }).end();
     } else {
-        const user = await prismaClient.user.findFirst({
+        const user = await prismaClient.users.findFirst({
             where: {
                 token: token
             }

@@ -6,14 +6,18 @@ import {authMiddleware} from "../middleware/auth-middleware.js";
 const userRouter = new express.Router();
 userRouter.use(authMiddleware);
 
-// User API
-userRouter.get('/api/users/current', userController.get);
-userRouter.patch('/api/users/current', userController.update);
-userRouter.delete('/api/users/logout', userController.logout);
+// // User API
+// userRouter.get('/api/users/current', userController.get);
+// userRouter.patch('/api/users/current', userController.update);
+// userRouter.delete('/api/users/logout', userController.logout);
 
 // Task API
-userRouter.post('/api/task', taskController.create);
+userRouter.post('/api/task/create', taskController.create);
 userRouter.get('/api/task/:taskid', taskController.get);
-userRouter.put('/api/task/:taskid', taskController.update);
-userRouter.delete('/api/task/:taskid', taskController.remove);
-userRouter.get('/api/task', taskController.search);
+// userRouter.put('/api/task/:taskid', taskController.update);
+// userRouter.delete('/api/task/:taskid', taskController.remove);
+// userRouter.get('/api/task', taskController.search);
+
+export {
+    userRouter
+}

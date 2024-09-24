@@ -3,10 +3,11 @@ import Joi from "joi";
 const createTaskValidation = Joi.object({
     title: Joi.string().max(100).required(),
     description: Joi.string().max(100).optional(),
-    completed: Joi.boolean().default(false)
+    completed: Joi.boolean().default(false),
+    username: Joi.string().optional()
 });
 
-const getTaskValidation = Joi.string().max(100).required();
+const getTaskValidation = Joi.required()
 
 const updateTaskValidation = Joi.object({
     id: Joi.string().max(100).required(),
