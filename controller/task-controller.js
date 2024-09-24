@@ -1,3 +1,4 @@
+import { logger } from "express-winston";
 import taskService from "../service/task-service.js";
 
 const create = async (req, res, next) => {
@@ -25,7 +26,8 @@ const get = async (req, res, next) => {
 const update = async (req, res, next) => {
     try {
         const request = req.body;
-        request.id = req.params.taskId;
+        const taskId = req.params.taskid;
+        request.id = taskId;
         const result = await taskService.update(req.user, request);
         res.status(200).json({
             data: result

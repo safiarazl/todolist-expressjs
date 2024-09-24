@@ -7,6 +7,7 @@ import {
 } from "../validation/task-validation.js";
 import {prismaClient} from "../config/database.js";
 import {ResponseError} from "../error/response-error.js";
+import {logger} from "../config/logging.js";
 
 const create = async (user, request) => {
     const task = validate(createTaskValidation, request);
@@ -24,12 +25,13 @@ const create = async (user, request) => {
 }
 
 const get = async (user, request) => {
+    // logger.info(`user = ${JSON.stringify(user)} & taskid = ${JSON.stringify(request)}`);
     const taskId = validate(getTaskValidation, request);
 
     const task = await prismaClient.tasks.findFirst({
         where: {
             username: user.username,
-            id: taskId
+            id: parseInt(taskId.taskid)
         },
         select: {
             title: true,
@@ -47,12 +49,14 @@ const get = async (user, request) => {
 }
 
 const update = async (user, request) => {
+    logger.info(`user = ${JSON.stringify(user)} & taskid = ${JSON.stringify(request)}`);
     const task = validate(updateTaskValidation, request);
+    logger.info(`task = ${JSON.stringify(task)}`);
 
     const totalTaskInDatabase = await prismaClient.tasks.count({
         where: {
             username: user.username,
-            id: task.id
+            id: parseInt(task.id)
         }
     });
 
@@ -62,7 +66,7 @@ const update = async (user, request) => {
 
     return prismaClient.tasks.update({
         where: {
-            id: task.id
+            id: parseInt(task.id)
         },
         data: {
             title: task.title,

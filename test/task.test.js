@@ -1,68 +1,83 @@
 import supertest from "supertest";
-import {web} from "../config/web.js";
-import {createTestUser, getTestUser, removeTestUser, removeAllTestTask, createTestTask, getTestTask} from "./test-util.js";
+import { web } from "../config/web.js";
+import {
+  createTestUser,
+  getTestUser,
+  removeTestUser,
+  removeAllTestTask,
+  createTestTask,
+  getTestTask,
+} from "./test-util.js";
 
-describe('POST /api/task/create', function () {
-    beforeEach(async () => {
-        await createTestUser();
+describe("POST /api/task/create", function () {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+  afterEach(async () => {
+    await removeAllTestTask();
+    await removeTestUser();
+  });
 
-    });
-    afterEach(async () => {
-        await removeAllTestTask();
-        await removeTestUser();
-    });
+  it("should can create new task", async () => {
+    const result = await supertest(web)
+      .post("/api/task/create")
+      .set("Authorization", "test")
+      .send({
+        title: "lakukan test",
+        description: "melakukan test dengan benar",
+        completed: false,
+      });
 
-    it('should can create new task', async () => {
-        const result = await supertest(web)
-            .post('/api/task/create')
-            .set('Authorization','test')
-            .send({
-               title: 'lakukan test',
-               description: 'melakukan test dengan benar',
-               completed: false 
-            });
+    expect(result.status).toBe(200);
+    expect(result.body.data.title).toBe("lakukan test");
+    expect(result.body.data.description).toBe("melakukan test dengan benar");
+    expect(result.body.data.completed).toBe(false);
+    expect(result.body.data.username).toBe("test");
+  });
 
-        expect(result.status).toBe(200);
-        expect(result.body.data.title).toBe("lakukan test");
-        expect(result.body.data.description).toBe("melakukan test dengan benar");
-        expect(result.body.data.completed).toBe(false);
-        expect(result.body.data.username).toBe("test");
-    });
+  it("should reject if request not valid", async () => {
+    const result = await supertest(web)
+      .post("/api/task/create")
+      .set("Authorization", "test")
+      .send({
+        title: "",
+      });
 
-    it('should reject if request not valid', async () => {
-        const result = await supertest(web)
-            .post('/api/task/create')
-            .set('Authorization','test')
-            .send({
-               title: ''
-            });
-
-        expect(result.status).toBe(400);
-        expect(result.body.errors).toBeDefined();
-    });
+    expect(result.status).toBe(400);
+    expect(result.body.errors).toBeDefined();
+  });
 }); // 1
 
-describe('GET /api/task/:taskid', function () {
-    beforeEach(async () => {
-        await createTestUser();
-        await createTestTask();
-    })
-    afterEach(async () => {
-        await removeAllTestTask();
-        await removeTestUser();
-    })
+describe("GET /api/task/:taskid", function () {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestTask();
+  });
+  afterEach(async () => {
+    await removeAllTestTask();
+    await removeTestUser();
+  });
 
-    it('should can get task', async () => {
-        const testTask = await getTestTask();
+  it("should can get task", async () => {
+    const testTask = await getTestTask();
 
-        const result = await supertest(web)
-            .get(`/api/task/${testTask.id}`)
-            .set('Authorization', 'test');
-        expect(result.status).toBe(200);
-        expect(result.body.data.id).toBe(testContact.id);
-        expect(result.body.data.first_name).toBe(testContact.first_name);
-        expect(result.body.data.last_name).toBe(testContact.last_name);
-        expect(result.body.data.email).toBe(testContact.email);
-        expect(result.body.data.phone).toBe(testContact.phone);
-    })
-})
+    const result = await supertest(web)
+      .get(`/api/task/${testTask.id}`)
+      .set("Authorization", "test");
+    expect(result.status).toBe(200);
+    expect(result.body.data.title).toBe(testTask.title);
+    expect(result.body.data.description).toBe(testTask.description);
+    expect(result.body.data.completed).toBe(testTask.completed);
+    expect(result.body.data.username).toBe(testTask.username);
+  });
+
+  it("should return 404 if task not found", async () => {
+    const testTask = await getTestTask();
+
+    const result = await supertest(web)
+      .get(`/api/task/${testTask.id + 200}`)
+      .set("Authorization", "test");
+    expect(result.status).toBe(404);
+    expect(result.body.errors).toBeDefined();
+  });
+});

@@ -14,7 +14,7 @@ userRouter.use(authMiddleware);
 // Task API
 userRouter.post('/api/task/create', taskController.create);
 userRouter.get('/api/task/:taskid', taskController.get);
-// userRouter.put('/api/task/:taskid', taskController.update);
+userRouter.put('/api/task/:taskid', taskController.update);
 // userRouter.delete('/api/task/:taskid', taskController.remove);
 // userRouter.get('/api/task', taskController.search);
 

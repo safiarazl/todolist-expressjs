@@ -7,9 +7,9 @@ describe("POST /api/users/register", function () {
   afterEach(async () => {
     await removeTestUser();
   });
-  beforeEach(async () => {
-    await removeTestUser();
-  });
+  // beforeEach(async () => {
+  //   await removeTestUser();
+  // });
 
   it("should can register new user", async () => {
     const result = await supertest(web).post("/api/users/register").send({
