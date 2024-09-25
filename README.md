@@ -4,59 +4,69 @@
 
 1. Clone repository:
 
-    ```bash
-    git clone https://github.com/safiarazl/todolist-expressjs.git
-    ```
+   ```bash
+   git clone https://github.com/safiarazl/todolist-expressjs.git
+   ```
+
 2. Masuk ke direktori project:
 
-    ```bash
-    cd todolist-expressjs
-    ```
+   ```bash
+   cd todolist-expressjs
+   ```
+
 3. Install dependencies:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
+
 4. Copy file `.env.example` ke `.env`:
 
-    ```bash
-    cp .env.example .env
-    ```
-5. Sesuaikan konfigurasi database pada file `.env`:
+   ```bash
+   cp .env.example .env
+   ```
 
-    ```env
-    DB_HOST
-    DB_USER
-    DB_PASSWORD
-    DB_NAME
-    ```
+5. Sesuaikan konfigurasi database, port & secret jwt pada file `.env`:
+
+   ```env
+   DB_HOST
+   DB_USER
+   DB_PASSWORD
+   DB_NAME
+   PORT
+   SECRET_JWT
+   ```
+
 6. Jalankan migrasi database:
 
-    ```bash
-    npx prisma migrate dev
-    ```
+   ```bash
+   npx prisma migrate dev
+   ```
+
 7. Jalankan aplikasi:
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
+
 8. Aplikasi dapat diakses pada `http://localhost:3000`.
 9. Untuk menjalankan user test:
 
-    ```bash
-    npm run testUser
-    ```
+   ```bash
+   npm run testUser
+   ```
+
 10. Untuk menjalankan task test:
 
     ```bash
     npm run testTask
     ```
+
 11. Untuk menjalankan test user dan task:
 
     ```bash
     npm run test
     ```
-
 
 # User API Spec
 
@@ -387,7 +397,47 @@ Response Body Success :
 
 ```json
 {
-  "data": "OK"
+  "data": {
+    "title": "pembaruan task",
+    "description": "melakukan test yang baru dengan benar",
+    "completed": false,
+    "username": "akunbaru",
+    "isDeleted": true
+  }
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "Task is not found"
+}
+```
+
+## Hard Remove Task API
+
+Endpoint : DELETE /api/task/:taskid
+
+Headers :
+
+- Authorization : token
+
+Response Body Success :
+
+```json
+{
+  "data": {
+    "id": 102,
+    "title": "berbenah",
+    "description": "melakukan test 4 dengan benar",
+    "completed": false,
+    "createdAt": "2024-09-25T02:29:08.181Z",
+    "updatedAt": "2024-09-25T07:17:04.509Z",
+    "deletedAt": "2024-09-25T07:17:04.508Z",
+    "isDeleted": true,
+    "username": "admin 2"
+  }
 }
 ```
 

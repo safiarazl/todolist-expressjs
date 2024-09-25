@@ -43,7 +43,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"akunbaru\",\r\n    \"password\":\"rahasia\"\r\n}",
+					"raw": "{\r\n    \"username\":\"akunbaruupdate\",\r\n    \"password\":\"rahasialagilagi\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -199,6 +199,43 @@
 						"api",
 						"task",
 						"494"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "harddelete task",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "admin",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/task/hard/102",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"task",
+						"hard",
+						"102"
 					]
 				}
 			},
