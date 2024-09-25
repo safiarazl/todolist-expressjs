@@ -11,16 +11,53 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080/todoapp"
+      "url": "http://localhost:5000/api/"
     }
   ],
   "tags": [
+    {
+      "name": "user",
+      "description": "User management"
+    },
     {
       "name": "task",
       "description": "Task management"
     }
   ],
   "paths": {
+    "/users":{
+      "get":{
+        "tags":[
+          "user"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "summary": "Get the list of all users",
+        "responses": {
+          "200": {
+            "description": "List of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+          }
+        }
+      }
+    },
     "/task": {
       "get": {
         "tags": [
