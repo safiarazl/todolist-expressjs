@@ -28,10 +28,16 @@ export const goingBackTestUser = async () => {
 };
 
 export const getTestUser = async () => {
-  return prismaClient.users.findUnique({
+  return prismaClient.users.findFirst({
     where: {
-      username: "test",
-      token: "test"
+      OR: [
+        {
+          username: "test",
+        },
+        {
+          token: "test",
+        }
+      ]
     },
   });
 };
