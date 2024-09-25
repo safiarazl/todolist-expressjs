@@ -37,8 +37,40 @@ const update = async (req, res, next) => {
     }
 }
 
+const remove = async (req, res, next) => {
+    try {
+        const result = await taskService.remove(req.user, req.params);
+        res.status(200).json({
+            data: result
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
+const search = async (req, res, next) => {
+    try {
+        const request = {
+            title: req.query.title,
+            description: req.query.description,
+            completed: req.query.completed,
+            page: req.query.page,
+            size: req.query.size
+        }
+        const result = await taskService.search(req.user, request);
+        res.status(200).json({
+            data: result.data,
+            paging: result.paging
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 export default {
     create,
     get,
-    update
+    update,
+    remove,
+    search
 }

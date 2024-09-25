@@ -31,7 +31,8 @@ const get = async (user, request) => {
     const task = await prismaClient.tasks.findFirst({
         where: {
             username: user.username,
-            id: parseInt(taskId.taskid)
+            id: parseInt(taskId.taskid),
+            isDeleted: false
         },
         select: {
             title: true,
@@ -56,7 +57,8 @@ const update = async (user, request) => {
     const totalTaskInDatabase = await prismaClient.tasks.count({
         where: {
             username: user.username,
-            id: parseInt(task.id)
+            id: parseInt(task.id),
+            isDeleted: false
         }
     });
 
@@ -83,9 +85,113 @@ const update = async (user, request) => {
 
 }
 
+const remove = async (user, request) => {
+    const taskId = validate(getTaskValidation, request);
+
+    const totalTaskInDatabase = await prismaClient.tasks.count({
+        where: {
+            username: user.username,
+            id: parseInt(taskId.taskid),
+            isDeleted: false
+        }
+    });
+
+    if (totalTaskInDatabase !== 1) {
+        throw new ResponseError(404, "task is not found");
+    }
+
+    return prismaClient.tasks.update({
+        where: {
+            id: parseInt(taskId.taskid)
+        },
+        data: {
+            isDeleted: true,
+            deletedAt: new Date(Date.now())
+        },
+        select: {
+            title: true,
+            description: true,
+            completed: true,
+            username: true,
+            isDeleted: true
+        }
+    });
+}
+
+const search = async (user, request) => {
+    const task = validate(searchTaskValidation, request);
+    logger.warn(`task = ${JSON.stringify(task)}`);
+    const skip = task.size * (task.page - 1);
+    
+    const tasks = await prismaClient.tasks.findMany({
+        where: {
+            username: user.username,
+            AND: {
+                OR: [
+                    {
+                        title: {
+                            contains: task.title
+                        }
+                    },
+                    {
+                        description: {
+                            contains: task.description
+                        }
+                    },
+                    {
+                        completed: task.completed
+                    }
+                ],
+            }
+        },
+        skip: skip,
+        take: task.size,
+        select: {
+            title: true,
+            description: true,
+            completed: true,
+            username: true
+        }
+    });
+
+    const totalItems = await prismaClient.tasks.count({
+        where: {
+            username: user.username,
+            isDeleted: false,
+            AND: {
+                OR: [
+                    {
+                        title: {
+                            contains: task.title
+                        }
+                    },
+                    {
+                        description: {
+                            contains: task.description
+                        }
+                    },
+                    {
+                        completed: task.completed
+                    }
+                ],
+            }
+        }
+    });
+
+    return {
+        data: tasks,
+        paging: {
+            page: task.page,
+            totalItems: totalItems,
+            totalPages: Math.ceil(totalItems / task.size)
+        }
+    }
+}
+
 export default {
     create,
     update,
-    get
-
+    get,
+    remove,
+    search
 }

@@ -46,8 +46,8 @@ export const createManyTestTask = async () => {
       data: {
         username: `test`,
         title: `test ${i}`,
-        description: `test ${i}`,
-        completed: `test${i}@smail.com`,
+        description: `test ${i} , dalam deskripsi`,
+        completed: false,
       },
     });
   }
