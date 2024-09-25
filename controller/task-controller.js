@@ -48,6 +48,17 @@ const remove = async (req, res, next) => {
     }
 }
 
+const hardremove = async (req, res, next) => {
+    try {
+        const result = await taskService.hardremove(req.user, req.params);
+        res.status(200).json({
+            data: result
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 const search = async (req, res, next) => {
     try {
         const request = {
@@ -72,5 +83,6 @@ export default {
     get,
     update,
     remove,
+    hardremove,
     search
 }

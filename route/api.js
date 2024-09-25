@@ -16,6 +16,7 @@ userRouter.post('/api/task/create', taskController.create);
 userRouter.get('/api/task/:taskid', taskController.get);
 userRouter.put('/api/task/:taskid', taskController.update);
 userRouter.delete('/api/task/:taskid', taskController.remove);
+userRouter.delete('/api/task/hard/:taskid', taskController.hardremove);
 userRouter.get('/api/task', taskController.search);
 
 export {

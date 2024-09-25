@@ -157,6 +157,40 @@ describe("DELETE /api/task/:taskid", function () {
   });
 });
 
+describe("DELETE /api/task/hard/:taskid", function () {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestTask();
+  });
+  afterEach(async () => {
+    await removeAllTestTask();
+    await removeTestUser();
+  });
+
+  it("should can hard delete task", async () => {
+    const testTask = await getTestTask();
+    const result = await supertest(web)
+      .delete(`/api/task/hard/${testTask.id}`)
+      .set("Authorization", "test");
+    expect(result.status).toBe(200);
+    expect(result.body.data.title).toBe(testTask.title);
+    expect(result.body.data.description).toBe(testTask.description);
+    expect(result.body.data.completed).toBe(testTask.completed);
+    expect(result.body.data.username).toBe(testTask.username);
+
+    // testTask = await getTestTask();
+    // expect(testTask).toBeNull();
+  });
+
+  it("should reject if task not found", async () => {
+    const result = await supertest(web)
+      .delete(`/api/task/hard/1234`)
+      .set("Authorization", "test");
+    expect(result.status).toBe(404);
+    expect(result.body.errors).toBeDefined();
+  });
+});
+
 describe("GET /api/task/", function () {
   beforeEach(async () => {
     await createTestUser();

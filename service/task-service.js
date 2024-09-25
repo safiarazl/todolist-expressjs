@@ -118,6 +118,33 @@ const remove = async (user, request) => {
     });
 }
 
+const hardremove = async (user, request) => {
+    const taskId = validate(getTaskValidation, request);
+
+    const totalTaskInDatabase = await prismaClient.tasks.count({
+        where: {
+            username: user.username,
+            id: parseInt(taskId.taskid),
+        }
+    });
+
+    if (totalTaskInDatabase !== 1) {
+        throw new ResponseError(404, "task is not found");
+    }
+
+    return prismaClient.tasks.delete({
+        where: {
+            id: parseInt(taskId.taskid)
+        },
+        select: {
+            title: true,
+            description: true,
+            completed: true,
+            username: true
+        }
+    })
+}
+
 const search = async (user, request) => {
     const task = validate(searchTaskValidation, request);
     logger.warn(`task = ${JSON.stringify(task)}`);
@@ -193,5 +220,6 @@ export default {
     update,
     get,
     remove,
+    hardremove,
     search
 }
