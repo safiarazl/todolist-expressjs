@@ -7,9 +7,9 @@ const userRouter = new express.Router();
 userRouter.use(authMiddleware);
 
 // // User API
-// userRouter.get('/api/users/current', userController.get);
-// userRouter.patch('/api/users/current', userController.update);
-// userRouter.delete('/api/users/logout', userController.logout);
+userRouter.get('/api/users/current', userController.get);
+userRouter.patch('/api/users/current', userController.update);
+userRouter.delete('/api/users/logout', userController.logout);
 
 // Task API
 userRouter.post('/api/task/create', taskController.create);

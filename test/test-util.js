@@ -1,13 +1,29 @@
 import { prismaClient } from "../config/database.js";
 import bcrypt from "bcrypt";
+import { logger } from "../config/logging.js";
 
 export const createTestUser = async () => {
   await prismaClient.users.create({
     data: {
       username: "test",
       password: await bcrypt.hash("rahasia", 10),
-      token: "test",
+      token: "test"
     },
+  });
+};
+
+export const goingBackTestUser = async () => {
+  const newpassword = await bcrypt.hash("rahasia", 10);
+  logger.warn(`new password: ${newpassword}`);
+  await prismaClient.users.update({
+    where: {
+      username: "safiar",
+      token: "test"
+    },
+    data: {
+      username: "test",
+      password: newpassword
+    }
   });
 };
 
@@ -15,6 +31,7 @@ export const getTestUser = async () => {
   return prismaClient.users.findUnique({
     where: {
       username: "test",
+      token: "test"
     },
   });
 };
@@ -22,9 +39,17 @@ export const getTestUser = async () => {
 export const removeTestUser = async () => {
   await prismaClient.users.deleteMany({
     where: {
-      username: {
-        contains: "test",
-      },
+      OR: [
+        {
+          username: "test",
+        },
+        {
+          username: "safiar",
+        },
+        {
+          token: "test",
+        }
+      ]
     },
   });
 };
